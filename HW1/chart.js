@@ -45,7 +45,7 @@ function drawChart(arr, type) {
       scales: {
         yAxes: [{
           ticks: {
-            max: 0.5,
+            max: 5,
             min: 0,
           }
         }]
