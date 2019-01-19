@@ -2,16 +2,21 @@
 <html lang="en" dir="ltr">
   <head>
     <meta charset="utf-8">
-    <title>CS230 simulate</title>
+    <title>CS230 processor simulate</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.bundle.js"></script>
     <script src="data/uniform.js"></script>
-    <script src="data/gaussian.js"></script>
+    <script src="data/1gaussian.js"></script>
+    <style>
+      div {
+        width: 50%!important;
+      }
+    </style>
   </head>
   <body>
-    <div style="width: 50%">
+    <div>
       <canvas id="uniform"></canvas>
       <canvas id="gaussian"></canvas>
     </div>
   </body>
-  <script src="chart.js"></script>
+  <script src="processor.js"></script>
 </html>

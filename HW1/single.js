@@ -1,6 +1,5 @@
 uniform = JSON.parse(uniform);
-gaussian = JSON.parse(gaussian);
-
+_1gaussian = JSON.parse(_1gaussian);
 
 const colors = {
   2: 'rgba(255,99,132,1)',
@@ -12,7 +11,7 @@ const colors = {
 }
 
 drawChart(uniform, "uniform");
-drawChart(gaussian, "gaussian");
+drawChart(_1gaussian, "gaussian");
 
 function drawChart(arr, type) {
   const datasets = []
@@ -30,28 +29,32 @@ function drawChart(arr, type) {
     datasets.push(dataset);
   }
 
-  let ctx = document.getElementById(type).getContext('2d');
-  let myLineChart = new Chart(ctx, {
-    type: 'line',
-    data: {
-      labels: generateLabels(),
-      datasets: datasets,
-    },
-    options: {
-      title: {
-        display: true,
-        text: `${type} distribution`
+  for (let i = 0; i < datasets.length; i++) {
+    let id = `${Math.pow(2, i + 1)}-${type}`
+    let ctx = document.getElementById(id).getContext('2d');
+    let myLineChart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: generateLabels(),
+        datasets: [datasets[i]],
       },
-      scales: {
-        yAxes: [{
-          ticks: {
-            max: 5,
-            min: 0,
-          }
-        }]
+      options: {
+        title: {
+          display: true,
+          text: id
+        },
+        scales: {
+          yAxes: [{
+            ticks: {
+              max: 5,
+              min: 0,
+            }
+          }]
+        }
       }
-    }
-  });
+    });
+  }
+
 }
 
 function generateLabels() {

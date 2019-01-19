@@ -1,8 +1,11 @@
 const jsonfile = require('jsonfile');
 
 const type = "gaussian";
-// calculate(20, 20, "uniform");
-// generateFile(type);
+const std_dev = 500;
+const log = false;
+
+// calculate(2048, 20, type);
+generateFile(type);
 
 function generateFile(type) {
   const P = [2, 4, 8, 16, 32, 64];
@@ -61,7 +64,7 @@ function calculate(M, P, distribution) {
     for (let i = 0; i < requests.length; i++) {
       if (!requests[i]) {
         if (distribution === "gaussian") {
-          requests[i] = gaussianDistribution(means[i], M);
+          requests[i] = getNumberIngaussianDistribution(means[i], std_dev, M);
         } else if (distribution === "uniform") {
           requests[i] = uniformDistribution(M);
         } else {
@@ -111,9 +114,12 @@ function calculate(M, P, distribution) {
       memories[i] = 0;
     }
   }
-  // console.log(`final curr is ${currAverageWaitingTime} and prev is ${prevAverageWaitingTime}`);
-  // console.log(`totalRequests is ${totalRequests}`)
-  // console.log(`cycles is ${cycles}`)
+
+  if (log) {
+    console.log(`final curr is ${currAverageWaitingTime} and prev is ${prevAverageWaitingTime}`);
+    console.log(`totalRequests is ${totalRequests}`)
+    console.log(`cycles is ${cycles}`)
+  }
 
   return currAverageWaitingTime;
 }
@@ -122,21 +128,30 @@ function uniformDistribution(memories) {
   return Math.floor(Math.random() * memories);
 }
 
-function gaussianDistribution(offset, total) {
- let u = 0, v = 0;
- while(u === 0) u = Math.random();//Converting [0,1) to (0,1)
- while(v === 0) v = Math.random();
- let diff = Math.round(Math.sqrt( -2.0 * Math.log( u ) ) * Math.cos( 2.0 * Math.PI * v ));
- if (diff == 0) return offset;
+function getNumberIngaussianDistribution(mean, std_dev, total) {
+ let diff = Math.round(gaussianDistribution(mean, std_dev));
+ if (diff == 0) return mean;
  let direct = diff > 0 ? 1 : -1;
  for (let i = 0; i < Math.abs(diff); i++) {
-   offset += direct;
-   if (offset >= total) offset = 0;
-   if (offset < 0) offset = total - 1;
+   mean += direct;
+   if (mean >= total) mean = 0;
+   if (mean < 0) mean = total - 1;
  }
- return offset;
+ return mean;
 }
 
 function diff(curr, prev) {
   return prev === null || (Math.abs(curr - prev) / prev) >= 2e-4;
+}
+
+function gaussianDistribution(mean, std_dev){
+    return mean + (uniform2NormalDistribution() * std_dev);
+}
+
+function uniform2NormalDistribution(){
+    let sum = 0.0;
+    for(let i = 0; i < 12; i++){
+        sum = sum + Math.random();
+    }
+    return sum - 6.0;
 }
